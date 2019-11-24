@@ -1,15 +1,58 @@
 <?php
+session_start();
 include_once "./layout/header.php";
 include_once "./model/connection.php";
 ?>
+<script>
+     // Thêm giỏ hàng ở phần product-details
+    function addCart(id) {
+        num = $("#num").val();
+        $.post('addCart.php', {'id':id,'num':num}, function(data) {  
+             $("#numberCart").text(data);  
+             window.location.href = "cart.php";  
+        });
+        
+    }
+
+        // Thêm giỏ hàng ở phần product
+    function addToCart(id) {
+        $.post('action.php', {'id': id}, function(data,status) {  
+            item = data.split["-"];
+             $("#numberCart").text(item[0]); 
+            
+        });
+        setTimeout(function() {
+            location.reload(true);
+        },1000)
+        
+    }
+
+        // Tăng số lượng + update thành tiền
+    function updateCart(id) {
+        num = $("#quantity_"+id).val();
+        $.post('updateCart.php', {'id': id,'num':num}, function(data) {
+             location.reload(true);
+        });
+        
+    }
+
+        // xóa giỏ hàng
+    function deleteCart (id) {
+          $.post('updateCart.php', {'id': id,'num':0}, function(data) {
+            //$("#listCart").load("http://localhost:8081/Kangaroo/cart.php #Cart");
+              window.location.href ="cart.php";
+        });
+    }
+
+</script>
  <?php
-                            $id = $_GET['id'];
-                            $stmt = $conn->prepare("SELECT * FROM product WHERE id=?");
-                            $stmt->bind_param("s", $id);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            while ($row = $result->fetch_assoc()) :
-                                ?>
+        $id = $_GET['id'];
+        $stmt = $conn->prepare("SELECT * FROM product WHERE id=?");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) :
+            ?>
         <div class="container product-detail product-full">
             <div class="row">
                 <div id="content" class="col-md-12">
@@ -141,21 +184,14 @@ include_once "./model/connection.php";
                                                 <label><b>Số lượng:</b></label>
                                                 <div class="quantity-content">
                                                     <span class="input-group-addon product_quantity_down">-</span>
-                                                    <input class="form-control soluongsp" type="text" name="" value="1" >
+                                                    <input id="num" class="form-control " type="text" name="num" value="1" >
                                                     <input type="hidden" name="product_id" value="2391"> 
                                                     <span class="input-group-addon product_quantity_up">+</span> </div>
                                             </div>
                                         </div>
                                         <div class="button-box">
-                                            <div class="button-pd">
-                                           
-                                            <input type="hidden" class="pid" value="<?= $row['id'] ?>">
-                                            <input type="hidden" class="pname" value="<?= $row['product_name'] ?>">
-                                            <input type="hidden" class="pimage" value="<?= $row['product_image'] ?>">
-                                            <input type="hidden" class="psale" value="<?= $row['product_sale'] ?>">
-                                            <input type="hidden" class="pcode" value="<?= $row['product_code'] ?>">                                           
-                                            <button type="button" title="Đặt hàng" data-loading-text="Đang Xử lý..." id="button-cart" class="btn btn-mega btn-lg addToCart"> Đặt hàng</button>
-                                        
+                                            <div class="button-pd">                                                                                  
+                                            <button type="button" title="Đặt hàng" id="button-cart" class="btn btn-mega btn-lg addToCart" onclick="addCart(<?= $row['id'] ?>)" name="addToCart"> Đặt hàng</button>                                        
                                             </div>                                           
                                         </div>
                                     </form>  
@@ -303,7 +339,7 @@ include_once "./model/connection.php";
                     </script>
                 </div>
             </div>
-        </div>
+        </div>     
         <?php
 include_once "./layout/footer.php";
 ?>

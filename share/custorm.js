@@ -1,78 +1,41 @@
-$(document).ready(function () {
+$(document).ready(function () {        // Thêm giỏ hàng ở phần product-details
+    function addCart(id) {
+        num = $("#num").val();
+        $.post('addCart.php', {'id':id,'num':num}, function(data) {  
+             $("#numberCart").text(data);  
+             window.location.href = "cart.php";  
+        });
+    }
 
-    // Tăng số lượng
-$(".itemQty").on('change', function(){
-    var $el = $(this).closest('tr');
+        // Thêm giỏ hàng ở phần product
+    function addToCart(id) {
+        $.post('action.php', {'id': id}, function(data,status) {  
+            item = data.split["-"];
+             $("#numberCart").text(item[0]); 
+            
+        });
+        setTimeout(function() {
+            location.reload(true);
+        },1000)
+        
+    }
 
-    var pid = $el.find(".pid").val();
-    var pprice = $el.find(".pprice").val();
-    var qty = $el.find(".itemQty").val();
+        // Tăng số lượng + update thành tiền
+    function updateCart(id) {
+        num = $("#quantity_"+id).val();
+        $.post('updateCart.php', {'id': id,'num':num}, function(data) {
+             location.reload(true);
+        });
+        
+    }
 
-    $.ajax({
-        url: 'action.php',
-        method: 'POST',
-        cache : false,
-        data: {qty:qty,pid:pid,pprice:pprice},
-        success: function (response) {
-            console.log(response);
-        }
-    });
-});
+        // xóa giỏ hàng
+    function deleteCart (id) {
+          $.post('updateCart.php', {'id': id,'num':0}, function(data) {
+            //$("#listCart").load("http://localhost:8081/Kangaroo/cart.php #Cart");
+              window.location.href ="cart.php";
+        });
+    }
 
-
-    // Thêm giỏ hàng ở product
-$(".addItemBtn").click(function(e){
-    e.preventDefault();
-    var $form = $(this).closest(".form-submit");
-    var pid = $form.find(".pid").val();
-    var pname = $form.find(".pname").val();
-    var pimage = $form.find(".pimage").val();
-    var psale = $form.find(".psale").val();
-    var pcode = $form.find(".pcode").val();
-    $.ajax({
-        url: "action.php",
-        method : "POST",
-        data: {pid:pid,pname:pname,pimage:pimage,psale:psale,pcode:pcode },
-        success: function (response) {
-            $("#message").html(response);
-            load_cart_item();
-        }
-    });
-});
-
-    // Thêm giỏ hàng ở product-details
-$(".addToCart").click(function(e){
-    e.preventDefault();
-    var $form = $(this).closest(".form-submit");
-    var pid = $form.find(".pid").val();
-    var pname = $form.find(".pname").val();
-    var pimage = $form.find(".pimage").val();
-    var psale = $form.find(".psale").val();
-    var pcode = $form.find(".pcode").val();
-    var qty = $(".form-submit").find(".soluongsp").val();
-    $.ajax({
-        url: "action.php",
-        method : "POST",
-        data: {pid:pid,pname:pname,pimage:pimage,psale:psale,pcode:pcode,qty:qty },
-        success: function (response) {
-            load_cart_item();
-            window.location.href = "cart.php";
-        }
-    });
-});
-
-
-load_cart_item();
-
-function load_cart_item() {
-    $.ajax({
-        method: "get",
-        url: "action.php",
-        data: {cartItem:"cart_item"},   
-        success: function (response) {
-            $("#cart-item").html(response);
-        }
-    });
-}
 });
 

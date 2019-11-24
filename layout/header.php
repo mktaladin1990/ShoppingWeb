@@ -9,7 +9,7 @@ include_once "./model/connection.php";
 
 <head prefix="og:http://ogp.me/ns# fb:http://ogp.me/ns/fb# product:http://ogp.me/ns/product#">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Mike VN</title>
+    <title>Mike.com.vn</title>
 
     <!--<base href="#">-->
     <base href=".">
@@ -600,9 +600,18 @@ Chuyên phân phối sản phẩm chính hãng Converse - Vans - Palladium - K-S
                         <div id="cart" class="btn-shopping-cart" onclick="location.href='cart.php'">
                             <i class="fas fa-shopping-cart"></i>
                             <a href="" id="cart-shop" data-loading-text="Đang Xử lý..." class="btn-group  dropdown-toggle" data-toggle="dropdown">
+                            <?php
+                            
+                                $numberCart = 0;
+                                if (isset($_SESSION['cart'])) {
+                                    foreach ($_SESSION['cart'] as $key => $value) {
+                                        $numberCart ++ ;
+                                    }
+                                } 
+                            ?>
                                 <div class="shopcart">                                   
                                     <span class=""><i class="fas fa-cart-plus"></i></span>
-                                    <span class="text-shopping-cart cart-total-full"><?= $result->num_rows?> </span>
+                                    <span id ="numberCart" class="text-shopping-cart cart-total-full"><?php echo $numberCart; ?></span>
                                 </div>
                             </a>
                         </div>

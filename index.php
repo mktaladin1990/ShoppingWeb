@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once "./layout/header.php";
 include_once "./model/connection.php";
 ?>
